@@ -1,28 +1,14 @@
 // display all users
-exports.index = (req, res) => {
-  return res.status(200).send('Failed');
-};
+exports.index = (req, res) => res.status(200).json('Failed');
 
-exports.myName = (req, res) => {
-  return res.status(200).json({ name: 'Gene' });
-};
-
-//update one user
-exports.update = (req, res) => {
-  return res.status(200).send('Failed');
-};
+// update one user
+exports.update = (req, res) => res.status(200).json('Failed');
 
 // delete one user
-exports.destroy = (req, res) => {
-  return res.status(200).send('Failed');
-};
+exports.destroy = (req, res) => res.status(200).json('Failed');
 
-//store one user
-exports.store = (req, res) => {
-  return res.status(200).send('Failed');
-};
+// store one user
+exports.store = (req, res) => res.status(200).json('Failed');
 
-//display one user
-exports.show = (req, res) => {
-  return res.status(200).send('Failed');
-};
+// display one user
+exports.show = (req, res) => res.status(200).json('Failed');
