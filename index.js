@@ -1,5 +1,5 @@
-const config = require("./src/config/app");
-const app = require("./app");
+const config = require('./src/config/app');
+const app = require('./app');
 
 async function startServer() {
   app.listen(config.port, (err) => {
@@ -8,7 +8,7 @@ async function startServer() {
       return;
     }
     console.log(
-      `################################################🛡️ Server listening on port: ${config.port} 🛡️ ################################################`
+      `################################################🛡️ Server listening on port: ${config.port} 🛡️ ################################################`,
     );
   });
 }
