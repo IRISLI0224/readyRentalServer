@@ -1,10 +1,8 @@
 // display all users
-exports.index = (req, res) => res.status(200).json('Failed');
+exports.register = (req, res) => res.status(200).json('register');
 
 // update one user
-exports.update = (req, res) => res.status(200).json('Failed');
-// delete one user
-exports.destroy = (req, res) => res.status(200).json('Failed');
+exports.login = (req, res) => res.status(200).json('login');
 
 // store one user
 exports.store = (req, res) => res.status(200).json('Failed');
