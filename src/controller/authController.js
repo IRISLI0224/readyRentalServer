@@ -1,4 +1,4 @@
-/* eslint-disable consistent-return */
+
 const bcrypt = require('bcrypt');
 const { registerValidation, loginValidation } = require('./validation');
 const { generateAccessToken } = require('./token');
