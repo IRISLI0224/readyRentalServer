@@ -1,4 +1,4 @@
-module.exports = {
+modules.exports = {
   extends: ['airbnb', 'prettier', 'plugin:node/recommended'],
   plugins: ['prettier'],
   parser: "babel-eslint",
