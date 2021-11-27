@@ -1,12 +1,8 @@
 // display all users
-exports.index = (req, res) => {
-  console.log('eslint');
-  return res.status(200).json('Failed');
-};
+exports.index = (req, res) => res.status(200).json('Failed');
 
 // update one user
 exports.update = (req, res) => res.status(200).json('Failed');
-
 // delete one user
 exports.destroy = (req, res) => res.status(200).json('Failed');
 

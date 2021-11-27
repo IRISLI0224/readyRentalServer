@@ -1,52 +1,64 @@
-const jwt = require('jsonwebtoken');
-/* eslint-disable implicit-arrow-linebreak */
 
-exports.signup_get = (req, res) =>
-  // eslint-disable-next-line implicit-arrow-linebreak
-  res.status(200).json([
-    {
-      id: 1,
-      Username: 'Jessie',
-      Email: 'jessie@gmail.com',
-      Password: 'abc1223',
-    },
-  ]);
-
-exports.signup_post = (req, res) => {
-  // mock a user
-  const user = {
-    id: 1,
-    Username: 'Jessie',
-    Email: 'jessie@gmail.com',
-    Password: 'abc1223',
+const bcrypt = require('bcrypt');
+const { registerValidation, loginValidation } = require('./validation');
+const { generateAccessToken } = require('./token');
+// mock users
+const users = [
+  {
+    name: 'Jessie',
+    email: 'jessie@gmail.com',
+    password: 'abc1223',
+  },
+  {
+    name: 'Yu',
+    email: 'yu@gmail.com',
+    Password: 'abc1224',
+  },
+];
+// validation
+// register-post // add useremail test
+exports.register = async (req, res) => {
+  const { error } = registerValidation(req.body); // validate the input
+  if (error) {
+    return res.status(400).send(error.details[0].message);
+  }
+  const emailExist = users.find((u) => u.email === req.body.email);
+  if (emailExist) return res.status(400).send('Email already exists');
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  const newUser = {
+    name: req.body.name,
+    email: req.body.email,
+    password: hashedPassword,
   };
-  jwt.sign({ user }, 'secretkey', (error, token) => {
-    res.json({
-      token,
-    });
-  });
+  try {
+    users.push(newUser);
+    res.status(201).send(`${newUser.name} has been registered`);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 };
 
-exports.login_get = (req, res) =>
-  res.status(200).json([
-    {
-      id: 1,
-      Username: 'Jessie',
-      Email: 'jessie@gmail.com',
-      Password: 'abc1223',
-    },
-  ]);
+// login-post// add password test
+exports.login = async (req, res) => {
+  const { error } = loginValidation(req.body); // validate the input
+  if (error) {
+    return res.status(400).send(error.details[0].message);
+  }
+  const emailExist = users.find((u) => u.email === req.body.email);
+  if (!emailExist) {
+    return res.status(400).send('Email does not exist');
+  }
+  const validPass = await bcrypt.compare(req.body.password, emailExist.password);
+  if (!validPass) return res.status(400).send('Invalid password');
 
-exports.login_post = (req, res) => {
-  const user = {
-    id: 1,
-    Username: 'Jessie',
-    Email: 'jessie@gmail.com',
-    Password: 'abc1223',
-  };
-  const token = jwt.sign(user, 'secretkey', { expiresIn: 60 * 60 });
-  res.status(200).send({ token, user });
+  const token = generateAccessToken(emailExist);
+  res.header('auth-token', token).send(token);
 };
-
-// delete one user
-exports.destroy = (req, res) => res.status(204);
+// delete one user//to be continued
+exports.destroy = (req, res) => {
+  if (users.id === req.params.id) {
+    res.status(204).json('user has been deleted');
+  } else {
+    res.status(404).json('You are not allowed to delete this user!');
+  }
+};
