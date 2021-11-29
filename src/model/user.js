@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 // 加密
 userSchema.pre('save', async function (next) {
     const user = this;
@@ -18,3 +19,5 @@ userSchema.methods.toJSON = function () {
 
     return userObject;
 };
+
+//module.exports = mongoose.model('User', userSchema);
