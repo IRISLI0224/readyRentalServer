@@ -5,3 +5,5 @@ const generateAccessToken = (user) => jwt.sign(user, 'secretkey', { expiresIn: 6
 module.exports = {
   generateAccessToken,
 };
+
+// move to user.js
