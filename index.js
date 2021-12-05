@@ -1,5 +1,6 @@
 const config = require('./src/config/app');
 const app = require('./app');
+const { connectToDB } = require('./src/loaders/db');
 
 async function startServer() {
   app.listen(config.port, (err) => {
@@ -13,4 +14,14 @@ async function startServer() {
     );
   });
 }
-startServer();
+
+connectToDB()
+  .then(() => {
+    console.log('DB connected');
+    startServer();
+  })
+  .catch((e) => {
+    console.log('DB connection failed');
+    console.error(e.message);
+    process.exit(1);
+  });
