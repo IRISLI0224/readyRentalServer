@@ -9,7 +9,6 @@ const verifyToken = (req, res, next) => {
   if (token) {
     jwt.verify(token, 'secretkey', (err, user) => {
       if (err) {
-        res.sendStatus(403);
         res.status(401).send('Wrong Token');
       }
       req.user = user;

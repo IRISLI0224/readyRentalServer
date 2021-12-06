@@ -8,6 +8,5 @@ module.exports = async (app) => {
   app.use(cors());
   app.use(express.json());
   app.use(config.api.prefix, apiRouter);
-
   return app;
 };
