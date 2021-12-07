@@ -1,23 +1,40 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+});
+
 // 加密
 userSchema.pre('save', async function (next) {
-    const user = this;
+  const user = this;
 
-    if (user.isModified('password')) {
-        user.password = await bcrypt.hash(user.password, 8);
-    }
-    next();
+  const salt = await bcrypt.genSalt();
+
+  if (user.isModified('password')) {
+    user.password = await bcrypt.hash(user.password, salt);
+  }
+  next();
 });
-//DELETE PASSWORD
+
+// Delete password when return user data to front end.
 userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
 
-    const user = this;
-    const userObject = user.toObject();
+  delete userObject.password;
 
-    delete userObject.password;
-    delete userObject.tokens;
-
-    return userObject;
+  return userObject;
 };
 
-//module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('user', userSchema);
+module.exports = User;

@@ -1,77 +1,59 @@
-
 const bcrypt = require('bcrypt');
-const { registerValidation, loginValidation } = require('./validation');
+const { registerValidation, loginValidation } = require('../validation/validation');
 const { generateAccessToken } = require('./token');
-// mock users
-const users = [
-  {
-    name: 'Jessie',
-    email: 'jessie@gmail.com',
-    password: 'abc1223',
-  },
-  {
-    name: 'Yu',
-    email: 'yu@gmail.com',
-    Password: 'abc1224',
-  },
-];
-// validation
-// register-post // add useremail test
+const User = require('../model/user');
+
+// register-post
 exports.register = async (req, res) => {
+  const { email, password } = req.body;
+
   const { error } = registerValidation(req.body); // validate the input
   if (error) {
     return res.status(400).send(error.details[0].message);
   }
-  // users.findOne({ email: req.body.email }) (mongodb)
-  const existingUser = users.find((u) => u.email === req.body.email);
-  if (existingUser) return res.status(400).send('Email already exists');
-  //写model文件夹里 变成函数
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    //jwt token 生成
 
-  const token = generateAccessToken(req.body)
-  const newUser = {
-    name: req.body.name,
-    email: req.body.email,
-    password: hashedPassword,
-    token: token,
-  };
-  // const token = generateAccessToken(newUser);
-  // newUser = [...newUser, token];
+  const existingUser = await User.findOne({ email });
+  if (existingUser) return res.status(400).send('Email already exists');
 
   try {
-    users.push(newUser);
-    res.status(201).send(newUser);
-    //邮箱验证
+    const user = await User.create({ email, password });
+
+    //generate jwt token
+    const token = generateAccessToken({ user });
+
+    res.status(201).json({ user, token });
   } catch (err) {
-    res.status(500).send(err);
+    res.status(400).send(err);
   }
 };
 
 // login-post// add password test
 exports.login = async (req, res) => {
-  // routes validation - 
+  // routes validation -
   const { error } = loginValidation(req.body); // validate the input
   if (error) {
     return res.status(400).send(error.details[0].message);
   }
-  // users.findOne({ email: req.body.email }) mongodb
-  const existingUser = users.find((u) => u.email === req.body.email);
+  const { email, password } = req.body;
+  const existingUser = await User.findOne({ email });
   if (!existingUser) {
     return res.status(401).send('Email does not exist');
   }
   // 变成函数
-  const validPass = await bcrypt.compare(req.body.password, existingUser.password);
+  const validPass = await bcrypt.compare(password, existingUser.password);
   if (!validPass) return res.status(401).send('Invalid password');
 
-  const token = generateAccessToken(existingUser);
-  const loginUser = {...existingUser, token};
+  const token = generateAccessToken({ existingUser });
 
-  res.status(200).json(loginUser);
+  res.status(201).json({ existingUser, token });
 };
-// delete one user//完成
+
+//logout
+exports.logout = () => {};
+
+// delete one user
 exports.destroy = (req, res) => {
-  //id mongodb 
+  //id mongodb
   if (users.id === req.params.id) {
     res.status(204).json('user has been deleted');
   } else {

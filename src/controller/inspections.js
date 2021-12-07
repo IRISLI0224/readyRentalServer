@@ -6,10 +6,22 @@ exports.index = (req, res) =>
   res.status(200).json([
     {
       _id: '1234',
-      userId: '4321',
+      userId: '432112',
       propertyId:'2345',
       preferredDate:'dateTest'
     },
+    {
+      _id: '1235454',
+      userId: '432145',
+      propertyId:'2345',
+      preferredDate:'dateTest'
+    },
+    {
+      _id: '1234960',
+      userId: '432167',
+      propertyId:'2345',
+      preferredDate:'dateTest'
+    }
   ]);
 
 // update one user
