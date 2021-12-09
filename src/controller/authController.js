@@ -6,10 +6,9 @@ const User = require('../model/user');
 // register-post
 exports.register = async (req, res) => {
   const { email, password } = req.body;
-
   const { error } = registerValidation(req.body); // validate the input
   if (error) {
-    return res.status(400).send(error.details[0].message);
+    return res.status(400).json(error.details[0].message);
   }
 
   const existingUser = await User.findOne({ email });
@@ -26,7 +25,6 @@ exports.register = async (req, res) => {
     res.status(400).send(err);
   }
 };
-
 // login-post// add password test
 exports.login = async (req, res) => {
   // routes validation -
