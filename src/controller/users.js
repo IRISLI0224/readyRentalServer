@@ -41,5 +41,5 @@ exports.destroy = async (req, res) => {
     const {id} =req.params;
     const user = User.findByIdAndDelete(id).exec();
     if (!user) res.status(404).send('user not found');
-    res.status(200).json(user);
+    res.status(200).json("user deleted");
 };
