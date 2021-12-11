@@ -1,6 +1,8 @@
 const config = require('./src/config/app');
 const app = require('./app');
 const { connectToDB } = require('./src/loaders/db');
+const errorHandler = require('./src/middleware/errorHandler');
+const unknownPoint = require('./src/middleware/unknownPoint');
 
 async function startServer() {
   app.listen(config.port, (err) => {
@@ -14,6 +16,8 @@ async function startServer() {
     );
   });
 }
+app.use(unknownPoint)
+app.use(errorHandler)
 
 connectToDB()
   .then(() => {
