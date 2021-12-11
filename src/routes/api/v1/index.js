@@ -8,9 +8,9 @@ const tokenAuth = require('../../../middleware/tokenAuth');
 
 //user routes
 router.get('/users', tokenAuth, userController.index);
-router.put('/users', tokenAuth, userController.update);
+router.put('/users/:id', tokenAuth, userController.update);
 router.get('/users/:id', tokenAuth, userController.show);
-router.delete('/users/:id', tokenAuth, authController.destroy);
+router.delete('/users/:id', tokenAuth, userController.destroy);
 
 //properties routes
 router.get('/properties', propertyController.index);
