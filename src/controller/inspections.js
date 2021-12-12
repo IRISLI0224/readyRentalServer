@@ -1,5 +1,3 @@
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable arrow-body-style */
 const Inspection = require('../model/inspection');
 
 // create one inspection instance and return the created object

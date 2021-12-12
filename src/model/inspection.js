@@ -26,5 +26,4 @@ const inspectionSchema = new mongoose.Schema({
 //TODO: add code to ensure the uniqueness of the inspection.
 const Inspection= mongoose.model('inspection', inspectionSchema);
 
-
 module.exports = Inspection;
