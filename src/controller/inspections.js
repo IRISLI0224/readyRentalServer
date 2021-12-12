@@ -1,55 +1,62 @@
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable arrow-body-style */
-// display all users
-exports.index = (req, res) =>
-  // eslint-disable-next-line implicit-arrow-linebreak
-  res.status(200).json([
-    {
-      _id: '1234',
-      userId: '432112',
-      propertyId:'2345',
-      preferredDate:'dateTest'
+const Inspection = require('../model/inspection');
+
+// create one inspection instance and return the created object
+exports.store = async (req, res) =>{
+  const{userId,propertyId,preferredDate} = req.body;
+  const inspection = new Inspection({
+    userId,propertyId,preferredDate
+  })
+  await inspection.save();
+  res.status(201).json(inspection);
+};
+
+//get all instances
+exports.index = async (req, res) =>{
+  const inspections = await Inspection.find().exec();
+  res.status(202).json(inspections);
+}
+
+
+// update one inspection information
+exports.update = async (req, res) =>{
+    const {id} = req.params;
+    const {userId, propertyId, preferredDate} = req.body;
+    const inspection = await Inspection.findByIdAndUpdate(id,{
+      userId,
+      propertyId,
+      preferredDate
     },
-    {
-      _id: '1235454',
-      userId: '432145',
-      propertyId:'2345',
-      preferredDate:'dateTest'
-    },
-    {
-      _id: '1234960',
-      userId: '432167',
-      propertyId:'2345',
-      preferredDate:'dateTest'
+    {new:true}).exec();
+
+    if (!inspection){
+      res.status(404).send('inspection not found');
     }
-  ]);
 
-// update one user
-exports.update = (req, res) =>
-  res.status(200).json({
-    _id: '1234',
-    userId: '4321',
-    propertyId:'2345',
-    preferredDate:'dateTest'
-  });
-// delete one user
-exports.destroy = (req, res) => res.status(204);
+    res.status(404).json(inspection);
+}
 
-// create one user and return the created object
-exports.store = (req, res) =>
-  res.status(200).json({
-    _id: '1234',
-    userId: '4321',
-    propertyId:'2345',
-    preferredDate:'dateTest'
-  });
+// delete one inspection
+exports.destroy = async (req, res) => {
+  const {id} = req.params;
+  const inspection = await Inspection.findByIdAndDelete(id).exec();
 
-// display one user
-exports.show = (req, res) =>
-  // eslint-disable-next-line implicit-arrow-linebreak
-  res.status(200).json({
-    _id: '1234',
-    userId: '4321',
-    propertyId:'2345',
-    preferredDate:'dateTest'
-  });
+  if (!inspection){
+    res.status(404).send('inspection not found');
+  }
+  
+  res.status(204);
+}
+
+// display selected inspection
+exports.show = async(req, res) =>{
+  const {id} = req.params;
+  const inspection = await Inspection.findById(id).exec();
+
+  if (!inspection){
+    res.status(404).send('inspection not found');
+  }
+  
+  res.json(inspection);
+};

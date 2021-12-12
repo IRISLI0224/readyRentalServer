@@ -20,8 +20,12 @@ router.delete('/properties/:id', tokenAuth, propertyController.destroy);
 router.put('/properties/:id', propertyController.update);
 
 //inspection routes
-router.get('/properties', inspectionController.index);
-router.get('/properties/:id', inspectionController.show);
+router.get('/inspections', inspectionController.index);
+router.get('/inspections/:id', inspectionController.show);
+router.post('/inspections', inspectionController.store);
+router.delete('/inspections/:id', inspectionController.destroy);
+router.put('/inspections/:id', inspectionController.update);
+
 
 //auth routes
 router.post('/register', authController.register);
