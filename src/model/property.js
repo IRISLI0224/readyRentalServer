@@ -8,27 +8,27 @@ const propertySchema = new mongoose.Schema({
   //     unique: true,
   //   },
 
-  streetNumber: {
-    type: Number,
-    required: true,
-  },
-  street: {
-    //lowercase?
-    type: String,
-    required: true,
-  },
-  city: {
-    type: String,
-    required: true,
-  },
-  state: {
-    type: String,
-    required: true,
-  },
-
-  postCode: {
-    type: Number,
-    required: true,
+  address: {
+    streetNumber: {
+      type: Number,
+      required: true,
+    },
+    streetName: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+      required: true,
+    },
+    postCode: {
+      type: Number,
+      required: true,
+    },
   },
   numOfBed: {
     type: Number,
@@ -58,7 +58,7 @@ const propertySchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
-  petAllowed: {
+  smokingAllowed: {
     type: Boolean,
     required: true,
   },
@@ -79,5 +79,8 @@ const propertySchema = new mongoose.Schema({
   },
 });
 
+propertySchema.index({ address: 1 }, { unique: true });
 const Property = mongoose.model('property', propertySchema);
+
+
 module.exports = Property;
