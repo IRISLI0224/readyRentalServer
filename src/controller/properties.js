@@ -45,14 +45,19 @@ exports.store = async (req, res) => {
   await property.save();
 
   //add property to user
-  const user = await findUserFromDB(req, res);
-  user.properties.addToSet(property._id);
-  property.user = user._id;
+  try {
+    const user = await findUserFromDB(req, res);
 
-  await user.save();
-  await property.save();
+    user.properties.addToSet(property._id);
+    property.user = user._id;
 
-  res.status(201).json(property);
+    await user.save();
+    await property.save();
+
+    res.status(201).json(property);
+  } catch (error) {
+    return res.status(404).json({ error });
+  }
 };
 
 // display all properties
@@ -115,10 +120,15 @@ exports.destroy = async (req, res) => {
   if (!property) res.status(404).send('property not found');
 
   //remove the property from user
-  const user = await findUserFromDB(req, res);
-  user.properties.pull(property._id);
-  await user.save();
-  res.status(204);
+  try {
+    const user = await findUserFromDB(req, res);
+    user.properties.pull(property._id);
+    await user.save();
+    console.log(user);
+    res.sendStatus(204);
+  } catch (error) {
+    return res.status(404).json({ error });
+  }
 };
 
 // display one property
@@ -136,7 +146,8 @@ const findUserFromDB = async (req, res) => {
   // get user from tokenAuth that puts user in req.user
   const userReq = req.user.user;
   const user = await User.findById(userReq._id).exec();
-
-  if (!user) return res.status(404).json({ error: 'cannot found user ' });
+  if (!user) {
+    throw 'cannot found user';
+  }
   return user;
 };

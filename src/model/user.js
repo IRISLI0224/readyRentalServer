@@ -18,6 +18,12 @@ const userSchema = new mongoose.Schema({
       ref: 'Property',
     },
   ],
+  inspections: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Inspection',
+    },
+  ],
 });
 
 // 加密
