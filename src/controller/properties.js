@@ -51,7 +51,7 @@ exports.store = async (req, res) => {
 
 /**
  * 69 - Search property at home page
- * dafault: get all properties
+ * default: get all properties
  * search (input): streetName, city, state, postCode
  * numOfBed (droplist): bed min, bad max
  * rent (droplist): rent min, rent max
