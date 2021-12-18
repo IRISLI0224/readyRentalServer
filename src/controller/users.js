@@ -23,7 +23,7 @@ exports.update = async (req, res) => {
 exports.show = async (req, res) => {
   // eslint-disable-next-line implicit-arrow-linebreak
   const { id } = req.params;
-  const user = await User.findById(id).exec();
+  const user = await User.findById(id).populate('properties').populate('inspections').exec();
 
   if (!user) res.status(404).send('user not found');
   res.status(200).json(user);

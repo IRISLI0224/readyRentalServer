@@ -9,7 +9,7 @@ const tokenAuth = require('../../../middleware/tokenAuth');
 //user routes
 router.get('/users', tokenAuth, userController.index);
 router.put('/users/:id', tokenAuth, userController.update);
-router.get('/users/:id', tokenAuth, userController.show);
+router.get('/users/:id', userController.show);
 router.delete('/users/:id', tokenAuth, userController.destroy);
 
 //auth routes

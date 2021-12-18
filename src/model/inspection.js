@@ -5,7 +5,6 @@ const inspectionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
-
   property: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Property',
@@ -16,7 +15,7 @@ const inspectionSchema = new mongoose.Schema({
   },
 });
 
-//TODO: add code to ensure the uniqueness of the inspection.
+//TODO: add code to ensure the uniqueness of the inspection, this way doesn't work
 inspectionSchema.index({ user: 1, property: 1 }, { unique: true });
 
 const Inspection = mongoose.model('Inspection', inspectionSchema);

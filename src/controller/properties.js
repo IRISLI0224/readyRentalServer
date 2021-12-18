@@ -124,7 +124,6 @@ exports.destroy = async (req, res) => {
     const user = await findUserFromDB(req, res);
     user.properties.pull(property._id);
     await user.save();
-    console.log(user);
     res.sendStatus(204);
   } catch (error) {
     return res.status(404).json({ error });
@@ -135,7 +134,7 @@ exports.destroy = async (req, res) => {
 exports.show = async (req, res) => {
   // eslint-disable-next-line implicit-arrow-linebreak
   const { id } = req.params;
-  const property = await Property.findById(id).exec();
+  const property = await Property.findById(id).populate('user').exec();
 
   if (!property) res.status(404).send('property not found');
   res.status(200).json(property);

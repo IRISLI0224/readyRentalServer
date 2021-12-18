@@ -44,7 +44,6 @@ exports.update = async (req, res) => {
   if (!inspection) {
     res.status(404).send('inspection not found');
   }
-
   res.status(404).json(inspection);
 };
 
@@ -56,18 +55,16 @@ exports.destroy = async (req, res) => {
   if (!inspection) {
     res.status(404).send('inspection not found');
   }
-
   res.status(204);
 };
 
 // display selected inspection
 exports.show = async (req, res) => {
   const { id } = req.params;
-  const inspection = await Inspection.findById(id).exec();
+  const inspection = await Inspection.findById(id).populate('user').populate('property').exec();
 
   if (!inspection) {
     res.status(404).send('inspection not found');
   }
-
   res.json(inspection);
 };
