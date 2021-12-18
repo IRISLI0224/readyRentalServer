@@ -82,5 +82,4 @@ const propertySchema = new mongoose.Schema({
 propertySchema.index({ address: 1 }, { unique: true });
 const Property = mongoose.model('property', propertySchema);
 
-
 module.exports = Property;

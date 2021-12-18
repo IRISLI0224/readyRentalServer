@@ -13,7 +13,7 @@ router.get('/users/:id', tokenAuth, userController.show);
 router.delete('/users/:id', tokenAuth, userController.destroy);
 
 //properties routes
-router.get('/properties', propertyController.index);
+router.get('/properties', propertyController.searchProperties);
 router.get('/properties/:id', propertyController.show);
 router.post('/properties', propertyController.store);
 router.delete('/properties/:id', tokenAuth, propertyController.destroy);
@@ -25,7 +25,6 @@ router.get('/inspections/:id', inspectionController.show);
 router.post('/inspections', inspectionController.store);
 router.delete('/inspections/:id', inspectionController.destroy);
 router.put('/inspections/:id', inspectionController.update);
-
 
 //auth routes
 router.post('/register', authController.register);
