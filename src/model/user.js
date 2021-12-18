@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  properties: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Property',
+    },
+  ],
 });
 
 // 加密
@@ -36,5 +42,5 @@ userSchema.methods.toJSON = function () {
   return userObject;
 };
 
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('User', userSchema);
 module.exports = User;

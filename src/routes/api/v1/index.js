@@ -12,10 +12,15 @@ router.put('/users/:id', tokenAuth, userController.update);
 router.get('/users/:id', tokenAuth, userController.show);
 router.delete('/users/:id', tokenAuth, userController.destroy);
 
+//auth routes
+router.post('/register', authController.register);
+router.post('/login', authController.login);
+router.get('/logout', authController.logout);
+
 //properties routes
 router.get('/properties', propertyController.index);
 router.get('/properties/:id', propertyController.show);
-router.post('/properties', propertyController.store);
+router.post('/properties', tokenAuth, propertyController.store);
 router.delete('/properties/:id', tokenAuth, propertyController.destroy);
 router.put('/properties/:id', propertyController.update);
 
@@ -25,11 +30,5 @@ router.get('/inspections/:id', inspectionController.show);
 router.post('/inspections', inspectionController.store);
 router.delete('/inspections/:id', inspectionController.destroy);
 router.put('/inspections/:id', inspectionController.update);
-
-
-//auth routes
-router.post('/register', authController.register);
-router.post('/login', authController.login);
-router.get('/logout', authController.logout);
 
 module.exports = router;
