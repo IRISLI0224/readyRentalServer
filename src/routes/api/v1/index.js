@@ -11,6 +11,11 @@ router.get('/users', tokenAuth, userController.index);
 router.put('/users/:id', tokenAuth, userController.update);
 router.get('/users/:id', tokenAuth, userController.show);
 router.delete('/users/:id', tokenAuth, userController.destroy);
+// router.delete(
+//   '/users/:userId/properties/:propertyId',
+//   tokenAuth,
+//   userController.removePropertyFromUser,
+// );
 
 //auth routes
 router.post('/register', authController.register);

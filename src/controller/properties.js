@@ -45,11 +45,7 @@ exports.store = async (req, res) => {
   await property.save();
 
   //add property to user
-
-  // get user from tokenAuth that puts user in req.user
-  const userReq = req.user.user;
-  const user = await User.findById(userReq._id).exec();
-
+  const user = await findUserFromDB(req, res);
   user.properties.addToSet(property._id);
   property.user = user._id;
 
@@ -91,14 +87,11 @@ exports.update = async (req, res) => {
   const newProperty = await Property.findByIdAndUpdate(
     id,
     {
-      streetNumber,
-      street,
-      city,
-      state,
-      postCode,
+      address: { streetNumber, streetName, city, state, postCode },
       numOfBath,
       numOfBed,
       numOfCarSpace,
+      smokingAllowed,
       roomType,
       rent,
       postDate,
@@ -114,12 +107,18 @@ exports.update = async (req, res) => {
   if (!newProperty) res.status().send('property not found');
   res.status(200).json(newProperty);
 };
+
 // delete one property
 exports.destroy = async (req, res) => {
   const { id } = req.params;
-  const property = Property.findByIdAndDelete(id).exec();
+  const property = await Property.findByIdAndDelete(id).exec();
   if (!property) res.status(404).send('property not found');
-  res.status(204).send('property deleted');
+
+  //remove the property from user
+  const user = await findUserFromDB(req, res);
+  user.properties.pull(property._id);
+  await user.save();
+  res.status(204);
 };
 
 // display one property
@@ -130,4 +129,14 @@ exports.show = async (req, res) => {
 
   if (!property) res.status(404).send('property not found');
   res.status(200).json(property);
+};
+
+// check if user from token exists in database
+const findUserFromDB = async (req, res) => {
+  // get user from tokenAuth that puts user in req.user
+  const userReq = req.user.user;
+  const user = await User.findById(userReq._id).exec();
+
+  if (!user) return res.status(404).json({ error: 'cannot found user ' });
+  return user;
 };
