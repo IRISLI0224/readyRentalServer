@@ -67,7 +67,7 @@ exports.store = async (req, res) => {
  * numOfBed (droplist): bed min, bad max
  * rent (droplist): rent min, rent max
  */
-exports.searchProperties = async (req, res) => {
+exports.index = async (req, res) => {
   // using req.query to get params
   // input: e.g hobart
   const { input, bedMin, bedMax, rentMin, rentMax } = req.query;
@@ -108,7 +108,6 @@ exports.searchProperties = async (req, res) => {
     searchQuery.rent.$lte = Number(rentMax);
   }
   const properties = await Property.find(searchQuery);
-  // res.writeHead(200);
   res.json(properties);
 };
 

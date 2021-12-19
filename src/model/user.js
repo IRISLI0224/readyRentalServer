@@ -41,7 +41,7 @@ userSchema.pre('save', async function (next) {
 // Delete password when return user data to front end.
 userSchema.methods.toJSON = function () {
   const user = this;
-  const userObject = this.toObject();
+  const userObject = user.toObject();
 
   delete userObject.password;
 

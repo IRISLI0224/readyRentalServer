@@ -18,7 +18,7 @@ router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 
 //properties routes
-router.get('/properties', propertyController.searchProperties);
+router.get('/properties', propertyController.index);
 router.get('/properties/:id', propertyController.show);
 router.post('/properties', tokenAuth, propertyController.store);
 router.delete('/properties/:id', tokenAuth, propertyController.destroy);
