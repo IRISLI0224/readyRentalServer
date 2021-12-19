@@ -60,11 +60,55 @@ exports.store = async (req, res) => {
   }
 };
 
-// display all properties
+/**
+ * 69 - Search property at home page
+ * default: get all properties
+ * search (input): streetName, city, state, postCode
+ * numOfBed (droplist): bed min, bad max
+ * rent (droplist): rent min, rent max
+ */
 exports.index = async (req, res) => {
-  // eslint-disable-next-line implicit-arrow-linebreak
-  const properties = await Property.find().exec();
-  res.status(200).json(properties);
+  // using req.query to get params
+  // input: e.g hobart
+  const { input, bedMin, bedMax, rentMin, rentMax } = req.query;
+  const searchQuery = {};
+  if (!!input) {
+    const inputReg = new RegExp(input, 'i');
+    console.log(inputReg);
+    searchQuery.$or = [];
+    searchQuery.$or.push({ 'address.streetName': { $regex: inputReg } });
+    searchQuery.$or.push({ 'address.city': { $regex: inputReg } });
+    searchQuery.$or.push({ 'address.state': { $regex: inputReg } });
+    if (!isNaN(input)) {
+      searchQuery.$or.push({ 'address.postCode': input });
+    }
+  }
+  if (!!bedMin) {
+    if (searchQuery.numOfBed == undefined) {
+      searchQuery.numOfBed = {};
+    }
+    searchQuery.numOfBed.$gte = Number(bedMin);
+  }
+  if (!!bedMax) {
+    if (searchQuery.numOfBed == undefined) {
+      searchQuery.numOfBed = {};
+    }
+    searchQuery.numOfBed.$lte = Number(bedMax);
+  }
+  if (!!rentMin) {
+    if (searchQuery.rent == undefined) {
+      searchQuery.rent = {};
+    }
+    searchQuery.rent.$gte = Number(rentMin);
+  }
+  if (!!rentMax) {
+    if (searchQuery.rent == undefined) {
+      searchQuery.rent = {};
+    }
+    searchQuery.rent.$lte = Number(rentMax);
+  }
+  const properties = await Property.find(searchQuery);
+  res.json(properties);
 };
 
 // update one property, override the old data?
