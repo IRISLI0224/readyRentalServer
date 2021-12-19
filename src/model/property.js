@@ -1,13 +1,10 @@
 const mongoose = require('mongoose');
 
 const propertySchema = new mongoose.Schema({
-  //for test purpose, comment out the userId currently
-  //     userId: {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     required: true,
-  //     unique: true,
-  //   },
-
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   address: {
     streetNumber: {
       type: Number,
@@ -80,6 +77,6 @@ const propertySchema = new mongoose.Schema({
 });
 
 propertySchema.index({ address: 1 }, { unique: true });
-const Property = mongoose.model('property', propertySchema);
+const Property = mongoose.model('Property', propertySchema);
 
 module.exports = Property;
