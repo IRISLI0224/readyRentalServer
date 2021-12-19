@@ -1,29 +1,23 @@
 const mongoose = require('mongoose');
 
 const inspectionSchema = new mongoose.Schema({
-  //for test purpose, comment out the userId currently
-  //     userId: {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     required: true,
-  //     unique: true,
-  //   },
-    userId:{
-        type:Number,
-        required:true,
-    },
-    propertyId:{
-        type:Number,
-        required:true,
-    },
-    preferredDate:{
-        type:String,
-        //TODO:change this type to Date after figuring out
-        //how to format date.
-        required:true,
-    }
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  property: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Property',
+  },
+  preferredDate: {
+    type: Date,
+    required: true,
+  },
 });
 
-//TODO: add code to ensure the uniqueness of the inspection.
-const Inspection= mongoose.model('inspection', inspectionSchema);
+//TODO: add code to ensure the uniqueness of the inspection, this way doesn't work
+inspectionSchema.index({ user: 1, property: 1 }, { unique: true });
+
+const Inspection = mongoose.model('Inspection', inspectionSchema);
 
 module.exports = Inspection;
