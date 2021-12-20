@@ -42,13 +42,15 @@ exports.store = async (req, res) => {
     description,
   });
 
-  await property.save();
-
-  //add property to user
   try {
     const user = await findUserFromDB(req, res);
 
+    await property.save();
+
+    //add property to user
     user.properties.addToSet(property._id);
+
+    //add user to the property
     property.user = user._id;
 
     await user.save();
@@ -56,7 +58,8 @@ exports.store = async (req, res) => {
 
     res.status(201).json(property);
   } catch (error) {
-    return res.status(404).json({ error });
+    //!why the msg thrown in the function cannot be passed here?
+    return res.status(404).json({ error: 'cannot find user' });
   }
 };
 
@@ -170,7 +173,7 @@ exports.destroy = async (req, res) => {
     await user.save();
     res.sendStatus(204);
   } catch (error) {
-    return res.status(404).json({ error });
+    return res.status(404).json({ error: 'cannot find user' });
   }
 };
 
@@ -187,7 +190,9 @@ exports.show = async (req, res) => {
 // check if user from token exists in database
 const findUserFromDB = async (req, res) => {
   // get user from tokenAuth that puts user in req.user
+
   const userReq = req.user.user;
+  console.log(req.user);
   const user = await User.findById(userReq._id).exec();
   if (!user) {
     throw 'cannot found user';

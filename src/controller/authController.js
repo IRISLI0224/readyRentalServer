@@ -33,17 +33,17 @@ exports.login = async (req, res) => {
     return res.status(400).send(error.details[0].message);
   }
   const { email, password } = req.body;
-  const existingUser = await User.findOne({ email });
-  if (!existingUser) {
+  const user = await User.findOne({ email });
+  if (!user) {
     return res.status(401).send('Email does not exist');
   }
   // 变成函数
-  const validPass = await bcrypt.compare(password, existingUser.password);
+  const validPass = await bcrypt.compare(password, user.password);
   if (!validPass) return res.status(401).send('Invalid password');
 
-  const token = generateAccessToken({ existingUser });
+  const token = generateAccessToken({ user });
 
-  res.status(201).json({ existingUser, token });
+  res.status(201).json({ user, token });
 };
 
 //logout
