@@ -57,7 +57,7 @@ const propertySchema = new mongoose.Schema({
   },
   smokingAllowed: {
     type: Boolean,
-    required: true,
+    required: false,
   },
   furnished: {
     type: Boolean,
@@ -69,10 +69,14 @@ const propertySchema = new mongoose.Schema({
   },
   intercom: {
     type: Boolean,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
+  },
+  status: {
+    type: String,
+    default: 'open',
   },
 });
 
