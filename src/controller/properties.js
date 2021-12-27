@@ -43,9 +43,8 @@ exports.store = async (req, res) => {
   });
 
   try {
-    const user = await findUserFromDB(req, res);
-
     await property.save();
+    const user = await findUserFromDB(req, res);
 
     //add property to user
     user.properties.addToSet(property._id);
@@ -59,7 +58,7 @@ exports.store = async (req, res) => {
     res.status(201).json(property);
   } catch (error) {
     //!why the msg thrown in the function cannot be passed here?
-    return res.status(404).json({ error: 'cannot find user' });
+    return res.status(404).json({ error: 'something went wrong' });
   }
 };
 
@@ -77,7 +76,6 @@ exports.index = async (req, res) => {
   const searchQuery = {};
   if (!!input) {
     const inputReg = new RegExp(input, 'i');
-    console.log(inputReg);
     searchQuery.$or = [];
     searchQuery.$or.push({ 'address.streetName': { $regex: inputReg } });
     searchQuery.$or.push({ 'address.city': { $regex: inputReg } });
@@ -192,7 +190,7 @@ const findUserFromDB = async (req, res) => {
   // get user from tokenAuth that puts user in req.user
 
   const userReq = req.user.user;
-  console.log(req.user);
+
   const user = await User.findById(userReq._id).exec();
   if (!user) {
     throw 'cannot found user';
