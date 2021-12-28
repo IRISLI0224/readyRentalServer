@@ -57,8 +57,7 @@ exports.store = async (req, res) => {
 
     res.status(201).json(property);
   } catch (error) {
-    //!why the msg thrown in the function cannot be passed here?
-    return res.status(404).json({ error: 'something went wrong' });
+    return res.status(404).json(error);
   }
 };
 
