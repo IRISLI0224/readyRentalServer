@@ -68,10 +68,14 @@ exports.store = async (req, res) => {
  * numOfBed (droplist): bed min, bad max
  * rent (droplist): rent min, rent max
  */
+
+/**
+ * 124 - Search bar filter through property type
+ */
 exports.index = async (req, res) => {
   // using req.query to get params
   // input: e.g hobart
-  const { input, bedMin, bedMax, rentMin, rentMax } = req.query;
+  const { input, bedMin, bedMax, rentMin, rentMax, type } = req.query;
   const searchQuery = {};
   if (!!input) {
     const inputReg = new RegExp(input, 'i');
@@ -106,6 +110,9 @@ exports.index = async (req, res) => {
       searchQuery.rent = {};
     }
     searchQuery.rent.$lte = Number(rentMax);
+  }
+  if (!!type) {
+    searchQuery.roomType = type;
   }
   const properties = await Property.find(searchQuery);
   res.json(properties);
