@@ -5,8 +5,7 @@ const unlinkFile = util.promisify(fs.unlink);
 const { uploadFile } = require('./../config/s3');
 
 exports.store = async (req, res) => {
-  const file = req.file;
-  console.log(file);
+  const file = req.file;;
 
   // some place to apply filter to image
 
