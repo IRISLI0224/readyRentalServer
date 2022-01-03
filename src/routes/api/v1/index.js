@@ -4,7 +4,11 @@ const userController = require('../../../controller/users');
 const propertyController = require('../../../controller/properties');
 const authController = require('../../../controller/authController');
 const inspectionController = require('../../../controller/inspections');
+const imageUploadController = require('../../../controller/imageUpload');
 const tokenAuth = require('../../../middleware/tokenAuth');
+
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 //user routes
 router.get('/users', tokenAuth, userController.index);
@@ -23,6 +27,8 @@ router.get('/properties/:id', propertyController.show);
 router.post('/properties', tokenAuth, propertyController.store);
 router.delete('/properties/:id', tokenAuth, propertyController.destroy);
 router.put('/properties/:id', tokenAuth, propertyController.update);
+
+router.post('/images', upload.single('image'), imageUploadController.store);
 
 //inspection routes
 router.get('/inspections', tokenAuth, inspectionController.index);
