@@ -24,6 +24,12 @@ const userSchema = new mongoose.Schema({
       ref: 'Inspection',
     },
   ],
+  resetPasswordToken: {
+    type: String,
+  },
+  resetPasswordExpires: {
+    type: Date,
+  },
 });
 
 // 加密

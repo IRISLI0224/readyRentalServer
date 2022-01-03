@@ -16,6 +16,9 @@ router.delete('/users/:id', tokenAuth, userController.destroy);
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
+router.post('/forgotPassword', authController.forgotPassword);
+router.get('/reset', authController.reset);
+router.put('/updatePasswordViaEmail', authController.updatePasswordViaEmail);
 
 //properties routes
 router.get('/properties', propertyController.index);
