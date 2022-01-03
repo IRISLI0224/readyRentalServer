@@ -12,6 +12,5 @@ exports.store = async (req, res) => {
 
   const result = await uploadFile(file);
   await unlinkFile(file.path);
-  console.log(result);
-  res.send({ imagePath: `/images/${result.Key}` });
+  res.send({ imageInfo: `/images/${result}` });
 };
