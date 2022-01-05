@@ -25,6 +25,7 @@ exports.store = async (req, res) => {
     airCon,
     intercom,
     description,
+    availableDate,
   } = req.body;
 
   const property = new Property({
@@ -41,6 +42,7 @@ exports.store = async (req, res) => {
     airCon,
     intercom,
     description,
+    availableDate,
   });
 
   try {
@@ -140,6 +142,7 @@ exports.update = async (req, res) => {
     airCon,
     intercom,
     description,
+    availableDate,
   } = req.body;
 
   const newProperty = await Property.findByIdAndUpdate(
@@ -158,6 +161,7 @@ exports.update = async (req, res) => {
       airCon,
       intercom,
       description,
+      availableDate,
     },
     { new: true }, //return the updated property
   ).exec();
