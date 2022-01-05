@@ -1,6 +1,7 @@
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable arrow-body-style */
 
+
 const Property = require('../model/property');
 const User = require('../model/user');
 
@@ -45,6 +46,7 @@ exports.store = async (req, res) => {
   try {
     await property.save();
     const user = await findUserFromDB(req, res);
+
 
     //add property to user
     user.properties.addToSet(property._id);
@@ -194,9 +196,7 @@ exports.show = async (req, res) => {
 // check if user from token exists in database
 const findUserFromDB = async (req, res) => {
   // get user from tokenAuth that puts user in req.user
-
   const userReq = req.user.user;
-
   const user = await User.findById(userReq._id).exec();
   if (!user) {
     throw 'cannot found user';
