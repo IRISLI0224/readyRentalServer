@@ -15,8 +15,9 @@ const inspectionSchema = new mongoose.Schema({
   },
 });
 
-//TODO: add code to ensure the uniqueness of the inspection, this way doesn't work
-inspectionSchema.index({ user: 1, property: 1 }, { unique: true });
+// TODO: add code to ensure the uniqueness of the inspection, this way doesn't work
+// Jack Zhu: creating index is only for better searching performance (speed)
+inspectionSchema.index({ user: 1, property: 1 });
 
 const Inspection = mongoose.model('Inspection', inspectionSchema);
 
