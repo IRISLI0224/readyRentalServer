@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const { registerValidation, loginValidation } = require('../validation/validation');
 const { generateAccessToken } = require('./token');
+const nodemailer = require('nodemailer');
 const User = require('../model/user');
 const crypto = require('crypto');
 
@@ -64,7 +65,6 @@ exports.destroy = (req, res) => {
 
 // forgotPassword -> send a link
 exports.forgotPassword = async (req, res) => {
-  const nodemailer = require('nodemailer');
   if (req.body.email === '') {
     res.status(400).json('email required');
   }
@@ -91,7 +91,7 @@ exports.forgotPassword = async (req, res) => {
       },
     });
     const mailOptions = {
-      from: '"Ready Rental" <buggodie123@gmail.com>',
+      from: '"Ready Rental" <buggodie@gmail.com>',
       to: `${user.email}`,
       subject: 'Link To Reset Password',
       text:
