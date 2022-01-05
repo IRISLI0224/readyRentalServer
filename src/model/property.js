@@ -78,6 +78,10 @@ const propertySchema = new mongoose.Schema({
     type: String,
     default: 'open',
   },
+  availableDate:{
+    type:Date,
+    required:false,
+  }
 });
 
 propertySchema.index({ address: 1 }, { unique: true });
