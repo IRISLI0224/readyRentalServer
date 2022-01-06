@@ -28,7 +28,7 @@ router.post('/properties', tokenAuth, propertyController.store);
 router.delete('/properties/:id', tokenAuth, propertyController.destroy);
 router.put('/properties/:id', tokenAuth, propertyController.update);
 
-router.post('/images', upload.single('image'), imageUploadController.store);
+router.post('/images', upload.array('image', 12), imageUploadController.store);
 
 //inspection routes
 router.get('/inspections', tokenAuth, inspectionController.index);
