@@ -1,7 +1,3 @@
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable arrow-body-style */
-
-
 const Property = require('../model/property');
 const User = require('../model/user');
 

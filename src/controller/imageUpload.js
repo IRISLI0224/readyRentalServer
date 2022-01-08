@@ -6,11 +6,13 @@ const { uploadFile } = require('./../config/s3');
 
 exports.store = async (req, res) => {
   const file = req.file;
-
-  // some place to apply filter to image
-
-  const result = await uploadFile(file);
-  console.log(result);
-  await unlinkFile(file.path);
-  res.send({ imagePath: `${result.Location}` });
+  // place to apply filter to image
+  try {
+    const result = await uploadFile(file);
+    console.log(result);
+    await unlinkFile(file.path);
+    res.status(201).json(result);
+  } catch (error) {
+    return res.status(404).json(error);
+  }
 };
