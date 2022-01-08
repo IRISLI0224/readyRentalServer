@@ -6,6 +6,7 @@ const authController = require('../../../controller/authController');
 const inspectionController = require('../../../controller/inspections');
 const imageUploadController = require('../../../controller/imageUpload');
 const tokenAuth = require('../../../middleware/tokenAuth');
+const contactEmailController = require('../../../controller/contactEmail');
 
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
@@ -36,5 +37,8 @@ router.get('/inspections/:id', tokenAuth, inspectionController.show);
 router.post('/inspections', inspectionController.store);
 router.delete('/inspections/:id', tokenAuth, inspectionController.destroy);
 router.put('/inspections/:id', tokenAuth, inspectionController.update);
+
+//contact email routes
+router.post('/contact', contactEmailController.send);
 
 module.exports = router;
