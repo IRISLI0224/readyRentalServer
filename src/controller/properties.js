@@ -22,6 +22,7 @@ exports.store = async (req, res) => {
     intercom,
     description,
     availableDate,
+    propImage
   } = req.body;
 
   const property = new Property({
@@ -39,6 +40,7 @@ exports.store = async (req, res) => {
     intercom,
     description,
     availableDate,
+    propImage
   });
 
   try {
