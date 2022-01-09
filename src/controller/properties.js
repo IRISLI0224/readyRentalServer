@@ -1,7 +1,3 @@
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable arrow-body-style */
-
-
 const Property = require('../model/property');
 const User = require('../model/user');
 
@@ -26,6 +22,7 @@ exports.store = async (req, res) => {
     intercom,
     description,
     availableDate,
+    propImage
   } = req.body;
 
   const property = new Property({
@@ -43,6 +40,7 @@ exports.store = async (req, res) => {
     intercom,
     description,
     availableDate,
+    propImage
   });
 
   try {

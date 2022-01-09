@@ -82,6 +82,12 @@ const propertySchema = new mongoose.Schema({
     type: Date,
     required: false,
   },
+  propImage: [
+    {
+      type: String,
+      required: false,
+    },
+  ],
 });
 
 propertySchema.index({ address: 1 }, { unique: true });
