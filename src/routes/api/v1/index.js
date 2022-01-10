@@ -30,7 +30,7 @@ router.get('/properties', propertyController.index);
 router.get('/properties/:id', propertyController.show);
 router.post('/properties', tokenAuth, propertyController.store);
 router.delete('/properties/:id', tokenAuth, propertyController.destroy);
-router.put('/properties/:id',  propertyController.update);
+router.put('/properties/:id', tokenAuth, propertyController.update);
 
 router.post('/images', upload.single('image'), imageUploadController.store);
 
