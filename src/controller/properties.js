@@ -125,13 +125,14 @@ exports.update = async (req, res) => {
   const { id } = req.params;
   const {
     streetNumber,
-    street,
+    streetName,
     city,
     state,
     postCode,
     numOfBath,
     numOfBed,
     numOfCarSpace,
+    smokingAllowed,
     roomType,
     rent,
     postDate,
@@ -141,6 +142,7 @@ exports.update = async (req, res) => {
     intercom,
     description,
     availableDate,
+    propImage
   } = req.body;
 
   const newProperty = await Property.findByIdAndUpdate(
@@ -160,6 +162,7 @@ exports.update = async (req, res) => {
       intercom,
       description,
       availableDate,
+      propImage
     },
     { new: true }, //return the updated property
   ).exec();
