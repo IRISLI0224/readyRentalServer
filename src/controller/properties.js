@@ -76,7 +76,8 @@ exports.store = async (req, res) => {
  */
 
 /**
- * 154 -
+ * 154 - Improve Search function at home page,
+ * so that it can search city and state together
  */
 exports.index = async (req, res) => {
   // using req.query to get params
@@ -87,7 +88,14 @@ exports.index = async (req, res) => {
   if (!!input) {
     const splitInput = splitAddr(input);
     searchQuery.$or = [];
-    if (splitInput.length === 1) {
+    if (splitInput.length === 2) {
+      // In this case, only resolve 2 words search query. [compound search] supports
+      // "city state", "state city", "city, state", "state, city"
+      // with only EXACT words
+      searchQuery.$or.push({ 'address.city': splitInput[0], 'address.state': splitInput[1] });
+      searchQuery.$or.push({ 'address.city': splitInput[1], 'address.state': splitInput[0] });
+    } else {
+      // in this case, treat it as the whole ONE word query for now.
       const inputReg = new RegExp(input, 'i');
       searchQuery.$or.push({ 'address.streetName': { $regex: inputReg } });
       searchQuery.$or.push({ 'address.city': { $regex: inputReg } });
@@ -95,13 +103,6 @@ exports.index = async (req, res) => {
       if (!isNaN(input)) {
         searchQuery.$or.push({ 'address.postCode': input });
       }
-    } else {
-      // length > 1.
-      // In this case, length===2. [compound search] supports
-      // "city state", "state city", "city, state", "state, city"
-      // with only EXACT words
-      searchQuery.$or.push({ 'address.city': splitInput[0], 'address.state': splitInput[1] });
-      searchQuery.$or.push({ 'address.city': splitInput[1], 'address.state': splitInput[0] });
     }
   }
   if (!!bedMin) {
