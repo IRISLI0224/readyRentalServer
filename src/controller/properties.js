@@ -1,5 +1,6 @@
 const Property = require('../model/property');
 const User = require('../model/user');
+const splitAddr = require('../utils/inputSplit');
 
 // create one property and return the created object
 exports.store = async (req, res) => {
@@ -22,7 +23,7 @@ exports.store = async (req, res) => {
     intercom,
     description,
     availableDate,
-    propImage
+    propImage,
   } = req.body;
 
   const property = new Property({
@@ -40,13 +41,12 @@ exports.store = async (req, res) => {
     intercom,
     description,
     availableDate,
-    propImage
+    propImage,
   });
 
   try {
     await property.save();
     const user = await findUserFromDB(req, res);
-
 
     //add property to user
     user.properties.addToSet(property._id);
@@ -74,19 +74,34 @@ exports.store = async (req, res) => {
 /**
  * 124 - Search bar filter through property type
  */
+
+/**
+ * 154 -
+ */
 exports.index = async (req, res) => {
   // using req.query to get params
   // input: e.g hobart
   const { input, bedMin, bedMax, rentMin, rentMax, type } = req.query;
   const searchQuery = {};
+
   if (!!input) {
-    const inputReg = new RegExp(input, 'i');
+    const splitInput = splitAddr(input);
     searchQuery.$or = [];
-    searchQuery.$or.push({ 'address.streetName': { $regex: inputReg } });
-    searchQuery.$or.push({ 'address.city': { $regex: inputReg } });
-    searchQuery.$or.push({ 'address.state': { $regex: inputReg } });
-    if (!isNaN(input)) {
-      searchQuery.$or.push({ 'address.postCode': input });
+    if (splitInput.length === 1) {
+      const inputReg = new RegExp(input, 'i');
+      searchQuery.$or.push({ 'address.streetName': { $regex: inputReg } });
+      searchQuery.$or.push({ 'address.city': { $regex: inputReg } });
+      searchQuery.$or.push({ 'address.state': { $regex: inputReg } });
+      if (!isNaN(input)) {
+        searchQuery.$or.push({ 'address.postCode': input });
+      }
+    } else {
+      // length > 1.
+      // In this case, length===2. [compound search] supports
+      // "city state", "state city", "city, state", "state, city"
+      // with only EXACT words
+      searchQuery.$or.push({ 'address.city': splitInput[0], 'address.state': splitInput[1] });
+      searchQuery.$or.push({ 'address.city': splitInput[1], 'address.state': splitInput[0] });
     }
   }
   if (!!bedMin) {
@@ -142,7 +157,7 @@ exports.update = async (req, res) => {
     intercom,
     description,
     availableDate,
-    propImage
+    propImage,
   } = req.body;
 
   const newProperty = await Property.findByIdAndUpdate(
@@ -162,7 +177,7 @@ exports.update = async (req, res) => {
       intercom,
       description,
       availableDate,
-      propImage
+      propImage,
     },
     { new: true }, //return the updated property
   ).exec();
