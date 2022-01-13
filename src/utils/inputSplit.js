@@ -10,10 +10,9 @@ function splitAddr(input) {
       return value.trim();
     });
     return trimmedArr;
-  } else {
-    // only has ' ' (space)
-    return input.split(' ');
   }
+  // else, only has ' ' (space)
+  return input.split(' ');
 }
 
 module.exports = splitAddr;
