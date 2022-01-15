@@ -49,16 +49,12 @@ exports.send = async (req, res) => {
 
   const contactUser = req.body.contactUser;
   if (contactUser) {
-    console.log('success');
     const inspection = new Inspection({
       user: contactUser._id,
       property: property,
     });
     await inspection.save();
-
-    //add inspection to user
     const user = await User.findById(contactUser._id).exec();
-
     user.inspections.addToSet(inspection._id);
     await user.save();
     return res.status(201).json({ inspection, user });
