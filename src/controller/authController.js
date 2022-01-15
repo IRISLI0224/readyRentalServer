@@ -24,9 +24,9 @@ exports.register = async (req, res) => {
     //generate jwt token
     const token = generateAccessToken({ user });
 
-    res.status(201).json({ user, token });
+    return res.status(201).json({ user, token });
   } catch (err) {
-    res.status(400).send(err);
+    return res.status(400).send(err);
   }
 };
 // login-post// add password test
@@ -47,7 +47,7 @@ exports.login = async (req, res) => {
 
   const token = generateAccessToken({ user });
 
-  res.status(201).json({ user, token });
+  return res.status(201).json({ user, token });
 };
 
 //logout
@@ -57,16 +57,16 @@ exports.logout = () => {};
 exports.destroy = (req, res) => {
   //id mongodb
   if (users.id === req.params.id) {
-    res.status(204).json('user has been deleted');
+    return res.status(204).json('user has been deleted');
   } else {
-    res.status(404).json('You are not allowed to delete this user!');
+    return res.status(404).json('You are not allowed to delete this user!');
   }
 };
 
 // forgotPassword -> send a link
 exports.forgotPassword = async (req, res) => {
   if (req.body.email === '') {
-    res.status(400).json('email required');
+    return res.status(400).json('email required');
   }
   console.error(req.body.email);
   const token = crypto.randomBytes(20).toString('hex');
@@ -75,7 +75,7 @@ exports.forgotPassword = async (req, res) => {
   }).then((user) => {
     if (user === null) {
       console.error('email not in database');
-      res.status(403).send('email not in db');
+      return res.status(403).send('email not in db');
     } else {
       console.log(user);
       user.resetPasswordToken = token;
@@ -106,9 +106,10 @@ exports.forgotPassword = async (req, res) => {
     transporter.sendMail(mailOptions, (err, response) => {
       if (err) {
         console.error('there was an error: ', err);
+        return res.status(404).json('there was an error: ', err);
       } else {
         console.log('here is the res: ', response);
-        res.status(200).json('recovery email sent');
+        return res.status(200).json('recovery email sent');
       }
     });
   });
@@ -121,10 +122,10 @@ exports.reset = async (req, res) => {
   }).then((user) => {
     if (user == null) {
       console.error('password reset link is invalid or has expired');
-      res.status(403).send('password reset link is invalid or has expired');
+      return res.status(403).send('password reset link is invalid or has expired');
     } else {
       console.log(user);
-      res.status(200).send({
+      return res.status(200).json({
         email: user.email,
         message: 'password reset link a-ok',
       });
@@ -144,7 +145,7 @@ exports.updatePasswordViaEmail = async (req, res) => {
       console.log(user);
       console.log(req.body.email);
       console.error('password reset link is invalid or has expired');
-      res.status(403).send('password reset link is invalid or has expired');
+      return res.status(403).json('password reset link is invalid or has expired');
     } else if (user != null) {
       console.log('user exists in db');
       console.log(user);
@@ -154,10 +155,10 @@ exports.updatePasswordViaEmail = async (req, res) => {
       user.resetPasswordExpires = null;
       user.save();
       console.log('password updated');
-      res.status(200).send({ message: 'password updated' });
+      return res.status(200).json({ message: 'password updated' });
     } else {
       console.error('no user exists in db to update');
-      res.status(401).json('no user exists in db to update');
+      return res.status(401).json('no user exists in db to update');
     }
   });
 };
