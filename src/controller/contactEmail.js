@@ -1,11 +1,11 @@
 const nodemailer = require('nodemailer');
 const Property = require('../model/property');
 const User = require('../model/user');
+const Inspection = require('../model/inspection');
 
 exports.send = async (req, res) => {
   const property = await Property.findById(req.body.id).exec();
   const user = await User.findById(property.user.toString()).exec();
-
   const output = `
     <p>You have a new contact request from Real Rental</p>
     <h3>New Enquiry for ${req.body.address}</h3>
@@ -46,4 +46,21 @@ exports.send = async (req, res) => {
       console.log('Message sent: %s', info.messageId);
     });
   });
+
+  const contactUser = req.body.contactUser;
+  if (contactUser) {
+    console.log('success');
+    const inspection = new Inspection({
+      user: contactUser._id,
+      property: property,
+    });
+    await inspection.save();
+
+    //add inspection to user
+    const user = await User.findById(contactUser._id).exec();
+
+    user.inspections.addToSet(inspection._id);
+    await user.save();
+    return res.status(201).json({ inspection, user });
+  }
 };
