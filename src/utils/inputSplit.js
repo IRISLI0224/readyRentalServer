@@ -18,7 +18,8 @@ function splitAddr(input) {
 /**
  * @author: Jack Zhu
  * resolve and split the string from google auto-completion
- * e.g. for now, can tackle following permutations: i.e. {streetNumber}? {streetName}, {suburb}? {city} {, |' '} {state}
+ * for now, can tackle following permutations/combinations: i.e. {streetNumber}? {streetName}, {suburb}? {city} {, |' '} {state}
+ * e.g. 
  * 25 Delavan Street, Wishart Brisbane, QLD
  * 25 Delavan Street, Temora NSW
  * Delavan Street, Temora NSW
