@@ -108,7 +108,6 @@ exports.index = async (req, res) => {
       // splitInput.length > 2 || splitInput[1].trim().split(' ').length > 1
       // 2) resolve and split the string from google auto-completion
       const res = handleGoogleAddr(input);
-      console.log('res: ', res);
       // 'res' may have 3 OR 4 elements
       if (res.length === 3) {
         // streetName, city, state
@@ -121,7 +120,6 @@ exports.index = async (req, res) => {
         searchQuery['address.city'] = res[2];
         searchQuery['address.state'] = res[3];
       }
-      console.log('search query:', searchQuery);
     }
   }
   if (!!bedMin) {
