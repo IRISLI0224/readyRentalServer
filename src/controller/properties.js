@@ -214,6 +214,16 @@ exports.show = async (req, res) => {
   return res.status(200).json(property);
 };
 
+// display random property
+exports.ads = async (req, res) => {
+  // eslint-disable-next-line implicit-arrow-linebreak
+  const total = await Property.countDocuments();
+  const skip = Math.floor(Math.random() * total) ;
+  const property = await Property.findOne({}).skip(skip).exec()
+  //if (!property) res.status(404).send('property not found');
+  res.status(200).json(property);
+};
+
 // check if user from token exists in database
 const findUserFromDB = async (req, res) => {
   // get user from tokenAuth that puts user in req.user
