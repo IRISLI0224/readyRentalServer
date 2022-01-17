@@ -57,7 +57,7 @@ exports.store = async (req, res) => {
     await user.save();
     await property.save();
 
-    res.status(201).json(property);
+    return res.status(201).json(property);
   } catch (error) {
     return res.status(404).json(error);
   }
@@ -111,12 +111,19 @@ exports.index = async (req, res) => {
       // 'res' may have 3 OR 4 elements
       if (res.length === 3) {
         // streetName, city, state
-        searchQuery['address.streetName'] = res[0];
+        const streetNameReg = new RegExp(res[0], 'i');
+        searchQuery['address.streetName'] = {};
+        searchQuery['address.streetName'].$regex = streetNameReg;
         searchQuery['address.city'] = res[1];
         searchQuery['address.state'] = res[2];
       } else if (res.length === 4) {
         searchQuery['address.streetNumber'] = res[0];
-        searchQuery['address.streetName'] = res[1];
+
+        const streetNameReg = new RegExp(res[1], 'i');
+        console.log('streetNameReg:', streetNameReg);
+        searchQuery['address.streetName'] = {};
+        searchQuery['address.streetName'].$regex = streetNameReg;
+        
         searchQuery['address.city'] = res[2];
         searchQuery['address.state'] = res[3];
       }
