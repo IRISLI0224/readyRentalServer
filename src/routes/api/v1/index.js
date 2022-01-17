@@ -28,6 +28,7 @@ router.put('/updatePasswordViaEmail', authController.updatePasswordViaEmail);
 //properties routes
 router.get('/properties', propertyController.index);
 router.get('/properties/:id', propertyController.show);
+router.get('/propertiesads', propertyController.ads);
 router.post('/properties', tokenAuth, propertyController.store);
 router.delete('/properties/:id', tokenAuth, propertyController.destroy);
 router.put('/properties/:id', tokenAuth, propertyController.update);
