@@ -36,7 +36,6 @@ function uploadFile(file) {
 
 exports.store = async (req, res) => {
   const file = req.file;
-  console.log(file);
   fs.access('./uploads', (err) => {
     if (err) {
       fs.mkdirSync('./uploads');
@@ -53,7 +52,6 @@ exports.store = async (req, res) => {
   }
   try {
     const result = await uploadFile(file);
-    console.log(result);
     await unlinkFile('./uploads/' + file.originalname);
     res.status(201).json(result);
   } catch (error) {
