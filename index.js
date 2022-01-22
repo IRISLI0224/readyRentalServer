@@ -17,7 +17,7 @@ async function startServer() {
   });
 }
 // app.use(unknownPoint)
-app.use(errorHandler)
+app.use(errorHandler);
 
 connectToDB()
   .then(() => {
