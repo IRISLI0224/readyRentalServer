@@ -9,7 +9,8 @@ const tokenAuth = require('../../../middleware/tokenAuth');
 const contactEmailController = require('../../../controller/contactEmail');
 
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const storage = multer.memoryStorage();
+const uploads = multer({ storage });
 
 //user routes
 router.get('/users', tokenAuth, userController.index);
@@ -32,8 +33,7 @@ router.get('/propertiesads', propertyController.ads);
 router.post('/properties', tokenAuth, propertyController.store);
 router.delete('/properties/:id', tokenAuth, propertyController.destroy);
 router.put('/properties/:id', tokenAuth, propertyController.update);
-
-router.post('/images', upload.single('image'), imageUploadController.store);
+router.post('/images', uploads.single('image'), imageUploadController.store);
 
 //inspection routes
 router.get('/inspections', tokenAuth, inspectionController.index);
