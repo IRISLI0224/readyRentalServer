@@ -22,7 +22,7 @@ exports.register = async (req, res) => {
     const user = await User.create({ email, password });
 
     //generate jwt token
-    const token = generateAccessToken({ user },{expiresIn:'5m'});
+    const token = generateAccessToken({ user });
 
     return res.status(201).json({ user, token });
   } catch (err) {
@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
   const validPass = await bcrypt.compare(password, user.password);
   if (!validPass) return res.status(401).send('Invalid password');
 
-  const token = generateAccessToken({ user },{expiresIn:'1m'});
+  const token = generateAccessToken({ user });
 
   return res.status(201).json({ user, token });
 };
