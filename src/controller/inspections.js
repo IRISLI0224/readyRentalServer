@@ -1,6 +1,5 @@
 const Inspection = require('../model/inspection');
 const User = require('../model/user');
-const findUserFromDB = require('./properties');
 
 // create one inspection instance and return the created object
 exports.store = async (req, res) => {
@@ -92,4 +91,15 @@ exports.show = async (req, res) => {
     res.status(404).send('inspection not found');
   }
   res.json(inspection);
+};
+
+// check if user from token exists in database
+const findUserFromDB = async (req, res) => {
+  // get user from tokenAuth that puts user in req.user
+  const userReq = req.user.user;
+  const user = await User.findById(userReq._id).exec();
+  if (!user) {
+    throw 'cannot found user';
+  }
+  return user;
 };

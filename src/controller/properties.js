@@ -249,7 +249,7 @@ exports.ads = async (req, res) => {
 };
 
 // check if user from token exists in database
-exports.findUserFromDB = async (req, res) => {
+const findUserFromDB = async (req, res) => {
   // get user from tokenAuth that puts user in req.user
   const userReq = req.user.user;
   const user = await User.findById(userReq._id).exec();
