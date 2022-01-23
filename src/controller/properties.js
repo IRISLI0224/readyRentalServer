@@ -249,7 +249,7 @@ exports.ads = async (req, res) => {
 };
 
 // check if user from token exists in database
-const findUserFromDB = async (req, res) => {
+exports.findUserFromDB = async (req, res) => {
   // get user from tokenAuth that puts user in req.user
   const userReq = req.user.user;
   const user = await User.findById(userReq._id).exec();
@@ -266,12 +266,13 @@ exports.cityCount = async (req, res) => {
   try {
     let counts = [];
     cities.map(async (city) => {
-      const number = await Property.find({ 'address.city': { $regex : new RegExp(city, "i") } }).count();
+      const number = await Property.find({
+        'address.city': { $regex: new RegExp(city, 'i') },
+      }).count();
       counts.push(number);
-      if(counts.length>=7) return res.status(200).json(counts);
+      if (counts.length >= 7) return res.status(200).json(counts);
     });
   } catch (e) {
     return res.status(400).json(e);
   }
-
 };

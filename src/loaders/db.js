@@ -1,23 +1,14 @@
 const mongoose = require('mongoose');
 
 exports.connectToDB = () => {
-  const {
-    NODE_ENV,
-    DB_HOST_LOCAL,
-    DB_PORT,
-    DB_DATABASE_LOCAL,
-    DB_USER,
-    DB_PASSWORD,
-    DB_HOST,
-    DB_DATABASE,
-  } = process.env;
-
-  let connectionString;
-  if (NODE_ENV === 'production') {
-    connectionString = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_DATABASE}`;
-  } else {
-    connectionString = `mongodb://${DB_HOST_LOCAL}:${DB_PORT}/${DB_DATABASE_LOCAL}`;
-  }
-
+  const { DB_HOST } = process.env;
+  const connectionString = `${DB_HOST}`;
   return mongoose.connect(connectionString);
+
+  // Use different DB in different Env
+  // if (NODE_ENV === 'development') {
+  //   connectionString = `mongodb://${DB_HOST_LOCAL}:${DB_PORT}/${DB_DATABASE_LOCAL}`;
+  // } else {
+  //   connectionString = `${DB_HOST}`;
+  // }
 };

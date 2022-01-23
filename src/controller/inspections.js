@@ -1,5 +1,6 @@
 const Inspection = require('../model/inspection');
 const User = require('../model/user');
+const findUserFromDB = require('./properties');
 
 // create one inspection instance and return the created object
 exports.store = async (req, res) => {
@@ -9,7 +10,10 @@ exports.store = async (req, res) => {
    * Verify if the user has applied this very inspection before,
    * if so, return the error message
    */
-  const existingInspection = await Inspection.findOne({ user: userId, property: propertyId }).exec();
+  const existingInspection = await Inspection.findOne({
+    user: userId,
+    property: propertyId,
+  }).exec();
   if (existingInspection) {
     // 注册/添加重名 — 请求与服务器端目标资源的当前状态相冲突 - http code : 409
     return res.status(409).json({
@@ -65,6 +69,16 @@ exports.destroy = async (req, res) => {
 
   if (!inspection) {
     res.status(404).send('inspection not found');
+  }
+
+  //delete inspection from user
+  try {
+    const user = await findUserFromDB(req, res);
+    user.inspections.pull(inspection._id);
+    await user.save();
+    res.sendStatus(204);
+  } catch (error) {
+    return res.status(404).json({ error: 'cannot find user' });
   }
   res.status(204);
 };
