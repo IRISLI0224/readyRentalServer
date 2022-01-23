@@ -123,7 +123,7 @@ exports.index = async (req, res) => {
         console.log('streetNameReg:', streetNameReg);
         searchQuery['address.streetName'] = {};
         searchQuery['address.streetName'].$regex = streetNameReg;
-        
+
         searchQuery['address.city'] = res[2];
         searchQuery['address.state'] = res[3];
       }
@@ -242,8 +242,8 @@ exports.show = async (req, res) => {
 exports.ads = async (req, res) => {
   // eslint-disable-next-line implicit-arrow-linebreak
   const total = await Property.countDocuments();
-  const skip = Math.floor(Math.random() * total) ;
-  const property = await Property.findOne({}).skip(skip).exec()
+  const skip = Math.floor(Math.random() * total);
+  const property = await Property.findOne({}).skip(skip).exec();
   //if (!property) res.status(404).send('property not found');
   res.status(200).json(property);
 };
@@ -257,4 +257,21 @@ const findUserFromDB = async (req, res) => {
     throw 'cannot found user';
   }
   return user;
+};
+
+//get property count of cities
+exports.cityCount = async (req, res) => {
+  const cities = ['Brisbane', 'Perth', 'Adelaide', 'Hobart', 'Sydney', 'Canberra', 'Melbourne'];
+
+  try {
+    let counts = [];
+    cities.map(async (city) => {
+      const number = await Property.find({ 'address.city': { $regex : new RegExp(city, "i") } }).count();
+      counts.push(number);
+      if(counts.length>=7) return res.status(200).json(counts);
+    });
+  } catch (e) {
+    return res.status(400).json(e);
+  }
+
 };
