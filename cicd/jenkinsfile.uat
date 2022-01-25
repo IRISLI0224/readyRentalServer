@@ -30,16 +30,6 @@ pipeline {
                 }
             }
         }
-/*        stage ('BUILD IMAGE') {
-            steps {
-                echo '++++++++++++++++++++++++ BUILD IMAGE BY DOCKER ++++++++++++++++++++++++++'
-                script {
-                    app = docker.build ('buggodie:latest')
-                    app = docker.build ('buggodie:buggodie')
-                    
-                }
-            }
-        }*/
         stage ('LOGIN DOCKER HUB') {
             steps {
                 echo '+++++++++++++++++++++++++ LOGIN DOCKER HUB +++++++++++++++++++++++++++++++'
