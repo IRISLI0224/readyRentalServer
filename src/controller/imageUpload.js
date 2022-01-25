@@ -44,7 +44,7 @@ exports.store = async (req, res) => {
 
   try {
     await sharp(req.file.buffer)
-      .resize(1280, 960, { fit: 'contain' })
+      .resize(1280, 960, { fit: 'cover' })
       .webp({ quality: 100 })
       .toFile('./uploads/' + file.originalname);
   } catch (error) {
