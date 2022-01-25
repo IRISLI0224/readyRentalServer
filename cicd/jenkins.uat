@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+    environment { 
+        ENVIRONMENT = 'uat'
+        USERNAME    = 'ubuntu'
+        HOSTNAME    = '3.26.189.227'
+    }
+    options {
+    disableConcurrentBuilds()
+    durabilityHint('PERFORMANCE_OPTIMIZED') //MAX_SURVIVABILITY or SURVIVABLE_NONATOMIC
+    }
+    stages {
+        stage ('INSTALL PACKAGE') {
+            agent {
+                docker { image 'node:14.18.2' }
+            }
+            steps {
+                echo '+++++++++++++++++++++++ INSTALL PACKAGE +++++++++++++++++++++++'
+                sh 'npm install'
+            }
+        }
+        stage ('BUILD IMAGE') {
+            steps {
+                echo '++++++++++++++++++++++++ BUILD IMAGE BY DOCKER ++++++++++++++++++++++++++'
+                configFileProvider([configFile(fileId: 'd5204d57-7c00-4813-9208-ff7f564d4814', targetLocation: '/var/jenkins_home/workspace/Buggodie-Be-uat')]) {
+                    script {
+                    app = docker.build ('buggodie:latest')
+                    app = docker.build ('buggodie:buggodie')
+                    }
+                }
+            }
+        }
+/*        stage ('BUILD IMAGE') {
+            steps {
+                echo '++++++++++++++++++++++++ BUILD IMAGE BY DOCKER ++++++++++++++++++++++++++'
+                script {
+                    app = docker.build ('buggodie:latest')
+                    app = docker.build ('buggodie:buggodie')
+                    
+                }
+            }
+        }*/
+        stage ('LOGIN DOCKER HUB') {
+            steps {
+                echo '+++++++++++++++++++++++++ LOGIN DOCKER HUB +++++++++++++++++++++++++++++++'
+				sh 'docker login -u lyang20161016 -p 43b725a3-beda-4e35-8f7d-11a688f59012'
+			}
+		}
+        stage ('PUSH IMAGE TO DOCKER') {
+            steps {
+                echo '++++++++++++++++++++++++++++ PUSH IMAGE TO DOCKER HUB +++++++++++++++++++++++++++'
+                sh 'docker tag buggodie:latest lyang20161016/buggodie'
+                sh 'docker tag buggodie:buggodie lyang20161016/buggodie'
+				sh 'docker push lyang20161016/buggodie'
+			}
+		}
+        stage ('DEPLOY TO EC2') {
+            steps {
+                echo '+++++++++++++++++++++++++++++++ LOGIN TO EC2 +++++++++++++++++++++++++++++++++'
+                sshagent(['webserver-buggodie']) {
+                    sh 'ssh ${USERNAME}@${HOSTNAME}'
+                    sh 'ssh ${USERNAME}@${HOSTNAME} sudo docker stop buggodie'
+                    sh 'ssh ${USERNAME}@${HOSTNAME} sudo docker rmi --force lyang20161016/buggodie'
+                    sh 'ssh ${USERNAME}@${HOSTNAME} sudo docker rm buggodie'
+                    sh 'ssh ${USERNAME}@${HOSTNAME} sudo docker login -u lyang20161016 -p 43b725a3-beda-4e35-8f7d-11a688f59012'
+                    sh 'ssh ${USERNAME}@${HOSTNAME} sudo docker pull lyang20161016/buggodie:latest'    
+                    sh 'ssh ${USERNAME}@${HOSTNAME} sudo docker run --name buggodie -d -p 8000:8000 lyang20161016/buggodie:latest' 
+                }              
+            }
+        } 
+        stage ('DELETE IMAGE ON JENKINS') {
+            steps {
+                echo '+++++++++++++++++++++++++++ DELETE IMAGE ON JENKINS ++++++++++++++++++++++++++++++++++'
+                sh 'docker rmi --force lyang20161016/buggodie'
+                sh 'docker rmi --force buggodie:latest'
+                sh 'docker rmi --force buggodie:buggodie'
+            }
+        }      
+    }
+}
