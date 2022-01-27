@@ -91,7 +91,7 @@ exports.forgotPassword = async (req, res) => {
       },
     });
     const mailOptions = {
-      from: '"Ready Rental" <buggodie@gmail.com>',
+      from: '"Ready Rental" <homereadyrental@gmail.com>',
       to: `${user.email}`,
       subject: 'Link To Reset Password',
       text:
