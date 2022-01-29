@@ -262,16 +262,38 @@ const findUserFromDB = async (req, res) => {
 //get property count of cities
 exports.cityCount = async (req, res) => {
   const cities = ['Brisbane', 'Perth', 'Adelaide', 'Hobart', 'Sydney', 'Canberra', 'Melbourne'];
-
   try {
     let counts = [];
-    cities.map(async (city) => {
-      const number = await Property.find({
-        'address.city': { $regex: new RegExp(city, 'i') },
-      }).count();
-      counts.push(number);
-      if (counts.length >= 7) return res.status(200).json(counts);
-    });
+    const number = await Property.find({
+      'address.city': { $regex: new RegExp('Brisbane', 'i') },
+    }).count();
+    counts.push(number);
+    const number2 = await Property.find({
+      'address.city': { $regex: new RegExp('Perth', 'i') },
+    }).count();
+    counts.push(number2);
+    const number3 = await Property.find({
+      'address.city': { $regex: new RegExp('Adelaide', 'i') },
+    }).count();
+    counts.push(number3);
+    const number4 = await Property.find({
+      'address.city': { $regex: new RegExp('Hobart', 'i') },
+    }).count();
+    counts.push(number4);
+    const number5 = await Property.find({
+      'address.city': { $regex: new RegExp('Sydney', 'i') },
+    }).count();
+    counts.push(number5);
+    const number6 = await Property.find({
+      'address.city': { $regex: new RegExp('Canberra', 'i') },
+    }).count();
+    counts.push(number6);
+    const number7 = await Property.find({
+      'address.city': { $regex: new RegExp('Melbourne', 'i') },
+    }).count();
+    counts.push(number7);
+    return res.status(200).json(counts);
+
   } catch (e) {
     return res.status(400).json(e);
   }
